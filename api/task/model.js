@@ -3,17 +3,17 @@ const db = require('../../data/dbConfig.js')
 
 
 async function getAllTasks() {
-const tasks = await db('tasks as t')
+const tasks = await db('tasks')
 .select(
- 't.task_id',
- 't.task_description',
- 't.task_notes',
- 't.task_completed',
+ 'tasks.task_id',
+ 'tasks.task_description',
+ 'tasks.task_notes',
+ 'tasks.task_completed',
  'projects.project_name',
  'projects.project_description'
 
 )
-.join('projects','t.project_id','=', 'projects.project_id');
+.join('projects','tasks.project_id','=', 'projects.project_id');
 
 const newTask = tasks.map(task => ({
     ...task, 
@@ -27,8 +27,8 @@ return newTask
 
 
 async function createTasks(task) {
-const [task_id] = await db('task').insert(task) 
-const newTask = await db('task').where('task_id',task_id).first() 
+const [task_id] = await db('tasks').insert(task) 
+const newTask = await db('tasks').where('task_id',task_id).first() 
 const result = {
     ...newTask,
     task_completed: newTask.task_completed === 1 ? true : false     
