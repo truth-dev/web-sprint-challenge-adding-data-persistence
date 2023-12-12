@@ -5,33 +5,26 @@ const router = express.Router()
 
 
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res,) => {
+const resources = await Resource.findResources();
+res.json(resources)
 
-Resource.getAllResources()
-.then(reso => {
-   res.json(reso)
-   
-})
-.catch(err => {
-    next(err)
-})
 })
 
 
 
-router.post('/', async (req, res, next) => {
-const resource = req.body
-if(!resource || !resource.resource_name){
+router.post('/', async (req, res,) => {
+const dataResource = req.body
+if(!dataResource || !dataResource.resource_name){
     res.status(400).json({
         message: "please provide a resource name"
     })
 }
-try {
-    const newResource = await Resource.createResources(resource)
-    res.status(201).json(newResource)
-} catch (err) {     
-    next(err)   
+else{
+    const newResource = await Resource.postRes(dataResource)
+    res.status(201).json(newResource)   
 }
+
 })
 
 router.use((err, req, res, next ) => {
