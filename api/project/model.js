@@ -5,7 +5,7 @@ const db = require('../../data/dbConfig')
 
 
 async function findProjects() {
-    return db('projects').select('*')
+    return await db('projects').select('*')
 }
 
 async function findPostPro(projects) {

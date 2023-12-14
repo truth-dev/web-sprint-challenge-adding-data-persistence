@@ -1,38 +1,30 @@
 // build your `/api/resources` router here
-const express = require('express')
-const Resource = require('./model')
-const router = express.Router()
+const express = require("express");
+const Resource = require("./model");
+const router = express.Router();
 
+router.get("/", async (req, res) => {
+  const resources = await Resource.findResources();
+  res.json(resources);
+});
 
-
-router.get('/', async (req, res,) => {
-const resources = await Resource.findResources();
-res.json(resources)
-
-})
-
-
-
-router.post('/', async (req, res,) => {
-const dataResource = req.body
-if(!dataResource || !dataResource.resource_name){
+router.post("/", async (req, res) => {
+  const dataResource = req.body;
+  if (!dataResource || !dataResource.resource_name) {
     res.status(400).json({
-        message: "please provide a resource name"
-    })
-}
-else{
-    const newResource = await Resource.postRes(dataResource)
-    res.status(201).json(newResource)   
-}
+      message: "please provide a resource name",
+    });
+  } else {
+    const newResource = await Resource.postRes(dataResource);
+    res.status(201).json(newResource);
+  }
+});
 
-})
-
-router.use((err, req, res, next ) => {
-    res.status(err.status || 500).json({
-        message: 'something went wrong, try again',
-        err: err.message,
-        stack:err.stack,
-    })
-    next()
+router.use((err, req, res) => {
+  res.status(err.status || 500).json({
+    message: "something went wrong, try again",
+    err: err.message,
+    stack: err.stack,
+  });
 });
 module.exports = router;
