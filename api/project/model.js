@@ -5,12 +5,22 @@ const db = require('../../data/dbConfig')
 
 
 async function findProjects() {
-    return await db('projects').select('*')
+  const projects = await db('projects')
+  const result = projects.map(project => ({
+    ...project,
+    project_completed: Boolean(project.project_completed)
+  }))
+  return result
 }
 
 async function findPostPro(projects) {
   const [project_id] = await db('projects').insert(projects)
-  return db('projects').where('project_id', project_id).first()
+  const result = await db('projects').where({ project_id }).first()
+  return {
+    ...result,
+    project_completed: Boolean(result.project_completed)
+  }
+  
 }
 module.exports = {
   findProjects,

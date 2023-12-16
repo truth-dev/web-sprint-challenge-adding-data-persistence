@@ -4,13 +4,15 @@ const db = require('../../data/dbConfig')
 
 
 async function findResources(){
-return await db('resources').select('*')
+return  db('resources').select('*')
 }
 
 
 async function postRes (resource) {
 const [resource_id] = await db('resources').insert(resource)
-return await db('resources').where({resource_id}).first()
+
+const nRes = await db('resources').where({resource_id}).first()
+return nRes
 }
 
 module.exports = {

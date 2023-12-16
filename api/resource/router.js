@@ -8,16 +8,24 @@ router.get("/", async (req, res) => {
   res.json(resources);
 });
 
-router.post("/", async (req, res) => {
-  const dataResource = req.body;
-  if (!dataResource || !dataResource.resource_name) {
-    res.status(400).json({
-      message: "please provide a resource name",
-    });
-  } else {
-    const newResource = await Resource.postRes(dataResource);
-    res.status(201).json(newResource);
-  }
+router.post("/", async (req, res, next) => {
+    const dataResource = req.body;
+    if (!dataResource || !dataResource.resource_name) {
+        res.status(400).json({
+            message: "please provide a resource name",
+        });
+    } else {
+        try {
+            const newResource = await Resource.postRes(dataResource);
+            res.status(201).json(newResource);
+        } catch (err) {
+            if (err.message === 'A resource with this name already exists') {
+                res.status(400).json({ message: err.message });
+            } else {
+                next(err);
+            }
+        }
+    }
 });
 
 router.use((err, req, res) => {

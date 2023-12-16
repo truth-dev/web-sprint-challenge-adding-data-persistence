@@ -13,13 +13,8 @@ server.use('/api/projects', projectRouter);
 server.use('/api/resources', resoRouter);
 server.use('/api/tasks', taskRouter);
 
-server.use((err, req, res,next) => { 
-    res.status(err.status || 500).json({
-        message: 'something went wrong, try again',
-        err: err.message,
-        stack: err.stack,
-    });
-  next()
-});
+server.use('*', (req, res) => { // eslint-disable-line
+    res.status(404).json({ message: 'not found' });
+    }); 
 
 module.exports = server;

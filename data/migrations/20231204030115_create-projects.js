@@ -31,6 +31,25 @@ exports.up = function (knex) {
 
      
     })
+    .createTable("projects_resources", (tab) => {
+      tab.increments("project_resource_id");
+      tab
+        .integer("project_id")
+        .unsigned()
+        .notNullable()
+        .references("project_id")
+        .inTable("projects")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
+      tab
+        .integer("resource_id")
+        .unsigned()
+        .notNullable()
+        .references("resource_id")
+        .inTable("resources")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
+    });
     
 };
 
@@ -40,6 +59,7 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
     return knex.schema
+    .dropTableIfExists("projects_resources")
     .dropTableIfExists("tasks")
     .dropTableIfExists("resources")
     .dropTableIfExists("projects")
