@@ -13,17 +13,17 @@ async function findTasks() {
   return result;
 }
 
+
+
+
 async function postTasks(task) {
+  if (!task.task_description || !task.project_id) {
+    return { error: 'Task description and project_id  is required' };
+  }
 
-    if (!task.task_description) {
-        return { error: 'Task description is required' };
-    }
-  const [task_id] = await db("tasks")
-    .insert(task)
-    .join("projects", "tasks.project_id", "projects.project_id")
-    .insert(task);
-
+  const [task_id] = await db("tasks").insert(task);
   const result = await db("tasks").where({ task_id }).first();
+
   return {
     ...result,
     task_completed: Boolean(result.task_completed),
@@ -33,4 +33,5 @@ async function postTasks(task) {
 module.exports = {
   findTasks,
   postTasks,
+ 
 };

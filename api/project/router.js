@@ -15,10 +15,17 @@ next(err)
 });
 
 router.post("/", async (req, res, next) => {
+  const { project_name } = req.body;
+
+  if (!project_name) {
+    return res.status(400).json({
+      message: "please provide a project name",
+    });
+  }
+
   try {
-    const newProject = req.body;
-    const addedProject = await Projects.addProject(newProject);
-    res.status(201).json(addedProject);
+    const newProject = await Projects.findPostPro(req.body);
+    res.status(201).json(newProject);
   } catch (err) {
     next(err);
   }

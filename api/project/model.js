@@ -13,6 +13,10 @@ async function findProjects() {
   return result
 }
 
+async function findProjectById(project_id) {
+  const result = await db('projects').where({ project_id }).first()
+  return result
+}
 async function findPostPro(projects) {
   const [project_id] = await db('projects').insert(projects)
   const result = await db('projects').where({ project_id }).first()
@@ -24,5 +28,6 @@ async function findPostPro(projects) {
 }
 module.exports = {
   findProjects,
-  findPostPro
+  findPostPro,
+  findProjectById
 }

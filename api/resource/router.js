@@ -28,11 +28,12 @@ router.post("/", async (req, res, next) => {
     }
 });
 
-router.use((err, req, res) => {
+router.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: "something went wrong, try again",
     err: err.message,
     stack: err.stack,
   });
+  next();
 });
 module.exports = router;
